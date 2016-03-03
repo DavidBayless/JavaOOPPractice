@@ -1,5 +1,52 @@
-public abstract Entity {
+abstract class Entity {
+  enum Size {Large, Small}
+  boolean isDead;
+  boolean isSleeping;
+  double weight;
 
+  public Entity() {
+    this.isDead = false;
+    this.isSleeping = false;
+    this.weight = 10;
+  }
+
+  void poop() {
+    this.weight = Math.ceil(this.weight / 10);
+  }
+
+  void eat(Entity other) {
+    this.weight += other.weight / 10;
+    other.die();
+  }
+
+  void eat() {
+    this.weight += this.weight * 1.1;
+  }
+  
+  void sleep() {
+    if (this.isSleeping == true) {
+      if (Math.floor(Math.random() * 2 + 1) == 2) {
+        this.isSleeping = false;
+        System.out.println("Woke up");
+      }
+    } else {
+      this.isSleeping = true;
+    }
+  }
+  void act() {
+    int random = (int) Math.floor(Math.random() * 3 + 1);
+    if (random == 3) {
+      this.sleep();
+    } else if (random == 2) {
+      this.eat();
+    } else if (random == 1) {
+      this.poop();
+    }
+  }
+
+  void die() {
+    this.isDead = true;
+  }
 }
 
 // - Is an abstract class
