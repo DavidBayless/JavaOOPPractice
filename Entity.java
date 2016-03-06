@@ -1,46 +1,85 @@
 abstract class Entity {
-  enum Size {Large, Small}
+  public enum Size {Large, Small}
   boolean isDead;
   boolean isSleeping;
   double weight;
+  String size;
 
   public Entity() {
     this.isDead = false;
     this.isSleeping = false;
     this.weight = 10;
+    setSize();
+  }
+
+  public void setSize(Size size) {
+    switch (size) {
+      case Large:
+        this.size = "Large";
+        break;
+      case Small:
+        this.size = "Small";
+        break;
+      default:
+        this.size = "Small";
+        break;
+     }
+  }
+
+  public void setSize() {
+    this.size = "Small";
   }
 
   void poop() {
-    this.weight = Math.ceil(this.weight / 10);
+    this.weight -= Math.ceil(this.weight / 10);
+    System.out.println("Pooping");
+    if (this.weight <= 0) {
+      this.die();
+    }
   }
 
   void eat(Entity other) {
     this.weight += other.weight / 10;
     other.die();
+    System.out.println("Died");
   }
 
   void eat() {
     this.weight += this.weight * 1.1;
+    System.out.println("Eating");
   }
-  
+
   void sleep() {
     if (this.isSleeping == true) {
       if (Math.floor(Math.random() * 2 + 1) == 2) {
         this.isSleeping = false;
         System.out.println("Woke up");
+      } else {
+        System.out.println("Still sleeping");
       }
     } else {
       this.isSleeping = true;
+      System.out.println("Sleeping");
     }
   }
+
   void act() {
-    int random = (int) Math.floor(Math.random() * 3 + 1);
-    if (random == 3) {
+    if (weight <= 0) {
+      this.isDead = true;
+    }
+    if (this.isDead != true && this.isSleeping != true) {
+      int random = (int) Math.floor(Math.random() * 3 + 1);
+      if (random == 3) {
+        this.sleep();
+      } else if (random == 2) {
+        this.eat();
+      } else if (random == 1) {
+        this.poop();
+      }
+    } else if (this.isSleeping == true) {
       this.sleep();
-    } else if (random == 2) {
-      this.eat();
-    } else if (random == 1) {
-      this.poop();
+    } else if (this.isDead == true) {
+      System.out.println("is dead");
     }
   }
 
